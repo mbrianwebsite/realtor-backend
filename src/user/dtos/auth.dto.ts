@@ -2,6 +2,7 @@ import {
   IsEmail,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
   Matches,
   MinLength,
@@ -25,6 +26,10 @@ export class SignupDto {
   @IsString()
   @MinLength(5)
   password: string;
+
+  @IsOptional()
+  @IsString()
+  productKey?: string;
 }
 
 export class SigninDto {
