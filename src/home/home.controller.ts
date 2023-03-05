@@ -9,6 +9,7 @@ import {
   ParseIntPipe,
   Body,
 } from '@nestjs/common';
+import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { PropertyType } from '@prisma/client';
 import { User, UserInfo } from 'src/user/decorators/user.decorators';
 import { CreateHomeDto, HomeResponseDto, UpdateHomeDto } from './dto/home.dto';
@@ -39,7 +40,7 @@ export class HomeController {
       ...(propertyType && { propertyType }),
     };
 
-    console.log({ city, minPrice, maxPrice, propertyType });
+    // console.log({ city, minPrice, maxPrice, propertyType });
     return this.homeService.getHomes(filters);
   }
 
@@ -54,15 +55,27 @@ export class HomeController {
   }
 
   @Put(':id')
-  updateHome(
+  async updateHome(
     @Param('id', ParseIntPipe) id: number,
     @Body() body: UpdateHomeDto,
+    @User() user: UserInfo,
   ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException();
+    }
     return this.homeService.updateHomeById(id, body);
   }
 
   @Delete(':id')
-  async deleteHome(@Param('id', ParseIntPipe) id: number) {
+  async deleteHome(
+    @Param('id', ParseIntPipe) id: number,
+    @User() user: UserInfo,
+  ) {
+    const realtor = await this.homeService.getRealtorByHomeId(id);
+    if (realtor.id !== user.id) {
+      throw new UnauthorizedException();
+    }
     return this.homeService.deleteHomeById(id);
   }
 }
