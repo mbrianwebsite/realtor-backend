@@ -61,7 +61,7 @@ export class HomeController {
   }
 
   @Delete(':id')
-  deleteHome() {
-    return;
+  async deleteHome(@Param('id', ParseIntPipe) id: number) {
+    return this.homeService.deleteHomeById(id);
   }
 }
