@@ -8,12 +8,10 @@ import {
   Param,
   ParseIntPipe,
   Body,
-  UseGuards,
 } from '@nestjs/common';
 import { UnauthorizedException } from '@nestjs/common/exceptions';
 import { PropertyType, UserType } from '@prisma/client';
 import { Roles } from 'src/decorators/roles.decorator';
-import { AuthGuard } from 'src/guards/auth.guard';
 import { User, UserInfo } from 'src/user/decorators/user.decorators';
 import {
   CreateHomeDto,
