@@ -1,7 +1,17 @@
-import { CanActivate } from '@nestjs/common';
+import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
 
+@Injectable()
 export class AuthGuard implements CanActivate {
-  canActivate() {
-    return false;
+  constructor(private readonly reflector: Reflector) {}
+  canActivate(context: ExecutionContext) {
+    const roles = this.reflector.getAllAndOverride('roles', [
+      context.getHandler(),
+      context.getClass(),
+    ]);
+
+    console.log(roles);
+
+    return true;
   }
 }
